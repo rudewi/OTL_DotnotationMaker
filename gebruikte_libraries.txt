@@ -1,0 +1,5 @@
+pip install otlmow-converter
+pip install otlmow-model
+
+pip3 install -U otlmow-converter
+pip3 install -U otlmow-model (zit al vervat in converter)
