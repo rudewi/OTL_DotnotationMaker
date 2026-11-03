@@ -171,7 +171,7 @@ def get_all_OTL_uris():
                         if hasattr(klasse_object, 'typeURI'):
                             # Voeg de waarde toe aan de lijst
                             type_uris.append(klasse_object.typeURI)
-                            
+
             except ImportError as e:
                 print(f"Waarschuwing: Kon module {volledige_module_naam} niet importeren. ({e})")
 
@@ -188,8 +188,12 @@ def OTL_attr_to_dot():
         urilijst = get_all_OTL_uris() #haal een lijst van object uris op uit de OTL onderdelen en installaties
 
         for uri in urilijst:
-            obj = instancecreator(uri) #Instantieer de klasse via het OTLMOW model
-            dotnotatie_attributen = get_dotnotation(obj) #Haalt alle dotnotatie attributen op voor het object 
+            try:
+                obj = instancecreator(uri) #Instantieer de klasse via het OTLMOW model
+                dotnotatie_attributen = get_dotnotation(obj) #Haalt alle dotnotatie attributen op voor het object 
+            except Exception as e:
+                print(f"Kan object niet instantiëren via URI {uri}: {e}")
+                continue
 
             #Verzamel info over het onderdeel (of installatie, implemenatieelement, ...)
             onderdeeldict = {} #een dict om alle info voor een bepaalde propertyset in te verzamelen
@@ -216,7 +220,7 @@ def OTL_to_json(OTLinfodict, json_filename):
 
     try:
         with open(json_filename, 'w', encoding='utf-8') as f:
-            json.dump(OTLinfodict, f, ensure_ascii=False, indent=4)
+            json.dump(OTLinfodict, f, ensure_ascii=False, indent=4, sort_keys=True)
 
         print(f"JSON file '{json_filename}' succesvol aangemaakt.")
 
