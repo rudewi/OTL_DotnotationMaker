@@ -43,8 +43,9 @@ def attribute_info_to_dict(obj, attribute):
     if attribute == "typeURI": #kan geen attr ophalen voor typeURI
         #attr = getattr(obj,"_typeURI")
         attribuutdict["attribuutdefinitie"] = "De URI van het object"
-        attribuutdict["datatype_attribuut"] = "Text"
-        attribuutdict["default_value"] = obj.typeURI
+        attribuutdict["OTL_datatype_attribuut"] = "StringField"
+        attribuutdict["civil3D_datatype_attribuut"] = "Text"
+        attribuutdict["civil3D_default_value"] = obj.typeURI
         attribuutdict["dotnotatie_attribuutnaam"] = attribute
 
     elif attribute == "geometry": 
@@ -60,48 +61,44 @@ def attribute_info_to_dict(obj, attribute):
         #DEFINTIE
         attribuutdict["attribuutdefinitie"] = (attr.definition[:250] + '..') if len(attr.definition) > 250 else attr.definition
         
+        #DATATYPES
         OTL_datatype = attr_ws.field
-        """
-        if type(attr) == OTLAttribuut:
-            OTL_datatype = attr_ws.field
-        else:
-            print(type(attr.__class__.__name__))
-        """
+        attribuutdict["OTL_datatype_attribuut"] = OTL_datatype.naam
             
-        #DATATYPE & DEFAULT VALUE(civil3D datatypes)
+        #Civil3D DATATYPE & DEFAULT VALUE(civil3D datatypes)
         if OTL_datatype == StringField:
-            attribuutdict["datatype_attribuut"] = "Text"
-            attribuutdict["default_value"] = ""
+            attribuutdict["civil3D_datatype_attribuut"] = "Text"
+            attribuutdict["civil3D_default_value"] = ""
         elif OTL_datatype == FloatOrDecimalField:
-            attribuutdict["datatype_attribuut"] = "Real"
-            attribuutdict["default_value"] = -999999999.000000
+            attribuutdict["civil3D_datatype_attribuut"] = "Real"
+            attribuutdict["civil3D_default_value"] = -999999999.000000
         elif OTL_datatype == NonNegIntegerField or OTL_datatype == IntegerField: 
-            attribuutdict["datatype_attribuut"] = "Integer"
-            attribuutdict["default_value"] = -999999999
+            attribuutdict["civil3D_datatype_attribuut"] = "Integer"
+            attribuutdict["civil3D_default_value"] = -999999999
         elif OTL_datatype == BooleanField:
             if attribute == "isActief":
-                attribuutdict["datatype_attribuut"] = 'keuzelijst'
-                attribuutdict["default_value"] = 'True'
+                attribuutdict["civil3D_datatype_attribuut"] = 'keuzelijst'
+                attribuutdict["civil3D_default_value"] = 'True'
                 attribuutdict["keuzelijstopties"] = ['True','False','-']
                 attribuutdict["keuzelijstnaam"] = 'booleanlijst-true-default'
             else:
-                attribuutdict["datatype_attribuut"] = 'keuzelijst'
-                attribuutdict["default_value"] = '-'
+                attribuutdict["civil3D_datatype_attribuut"] = 'keuzelijst'
+                attribuutdict["civil3D_default_value"] = '-'
                 attribuutdict["keuzelijstopties"] = ['-','True','False']
                 attribuutdict["keuzelijstnaam"] = 'booleanlijst'
 
         #KEUZELIJSTOPTIES
         elif OTL_datatype.naam.startswith("Kl"):
-            attribuutdict["datatype_attribuut"] = 'keuzelijst'
-            attribuutdict["default_value"] = '-'
+            attribuutdict["civil3D_datatype_attribuut"] = 'keuzelijst'
+            attribuutdict["civil3D_default_value"] = '-'
             keuzelijstopties = ["-"] #Default value voor keuzelijst moet in lijst voorkomen
             for i, k in enumerate(attr.field.options.keys()):
                 keuzelijstopties.append(k)
             attribuutdict["keuzelijstopties"] = keuzelijstopties
             attribuutdict["keuzelijstnaam"] = str(attr.field.naam)       
         else: #DateField, URIField, ..
-            attribuutdict["datatype_attribuut"] = "Text"
-            attribuutdict["default_value"] = ""
+            attribuutdict["civil3D_datatype_attribuut"] = "Text"
+            attribuutdict["civil3D_default_value"] = ""
 
     return attribuutdict
 
@@ -218,7 +215,7 @@ def OTL_to_json(OTLinfodict, json_filename):
 
     try:
         with open(json_filename, 'w', encoding='utf-8') as f:
-            json.dump(OTLinfodict, f)
+            json.dump(OTLinfodict, f, ensure_ascii=False, indent=4)
 
         print(f"JSON file '{json_filename}' succesvol aangemaakt.")
 
