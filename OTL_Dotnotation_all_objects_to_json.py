@@ -148,11 +148,12 @@ def get_all_OTL_uris():
     # 1. Importeer de directory (package). 
     import otlmow_model.OtlmowModel.Classes.Onderdeel as onderdeel_directory
     import otlmow_model.OtlmowModel.Classes.Installatie as installatie_directory
+    import otlmow_model.OtlmowModel.Classes.ImplementatieElement as implementatie_directory
 
     type_uris = []
 
     # 2. Loop door alle Python-bestanden (submodules) in de directory
-    for dir in [onderdeel_directory, installatie_directory]:
+    for dir in [onderdeel_directory, installatie_directory, implementatie_directory]:
         for module_info in pkgutil.iter_modules(dir.__path__):
             volledige_module_naam = f"{dir.__name__}.{module_info.name}"
             
