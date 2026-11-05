@@ -66,16 +66,16 @@ def attribute_info_to_dict(obj, attribute):
         attribuutdict["OTL_datatype_attribuut"] = OTL_datatype.naam
             
         #Civil3D DATATYPE & DEFAULT VALUE(civil3D datatypes)
-        if OTL_datatype == StringField:
+        if OTL_datatype.naam == "String":
             attribuutdict["civil3D_datatype_attribuut"] = "Text"
             attribuutdict["civil3D_default_value"] = ""
-        elif OTL_datatype == FloatOrDecimalField:
+        elif OTL_datatype.naam == "Decimal" or OTL_datatype.naam == "Float":
             attribuutdict["civil3D_datatype_attribuut"] = "Real"
             attribuutdict["civil3D_default_value"] = -999999999.000000
-        elif OTL_datatype == NonNegIntegerField or OTL_datatype == IntegerField: 
+        elif OTL_datatype.naam == "NonNegInteger" or OTL_datatype.naam == "Integer":
             attribuutdict["civil3D_datatype_attribuut"] = "Integer"
             attribuutdict["civil3D_default_value"] = -999999999
-        elif OTL_datatype == BooleanField:
+        elif OTL_datatype.naam == "Boolean":
             if attribute == "isActief":
                 attribuutdict["civil3D_datatype_attribuut"] = 'keuzelijst'
                 attribuutdict["civil3D_default_value"] = 'True'
